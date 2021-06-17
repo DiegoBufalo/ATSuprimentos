@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres?schema=ATSuprimentos
+    username: postgres
+    password: root
+  jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: update
+  application:
+    name: Produtos
+    
+server:
+  port: 8080
+  error:
+    include-stacktrace: on-param
