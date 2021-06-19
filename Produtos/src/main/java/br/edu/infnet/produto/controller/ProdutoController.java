@@ -36,6 +36,18 @@ public class ProdutoController {
 		return service.getById(id);
 	}
 	
+	@GetMapping("/cotacoes/listar")
+	@ResponseStatus(value = HttpStatus.OK)
+	public List<ProdutoDto> getAllWithQuotes(){
+		return service.getAllWithQuotes();	
+	}
+	
+	@GetMapping("/cotacoes/{id}")
+	@ResponseStatus(value = HttpStatus.OK)
+	public ProdutoDto getByIdWithQuotes(@PathVariable Long id) {
+		return service.getByIdWithQuotes(id);
+	}
+	
 	@PostMapping("/criar")
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public ProdutoDto create(@RequestBody ProdutoDto produto) {

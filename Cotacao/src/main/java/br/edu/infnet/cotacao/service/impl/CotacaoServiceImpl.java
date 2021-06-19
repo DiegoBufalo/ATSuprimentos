@@ -8,13 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.edu.infnet.cotacao.dto.CotacaoDto;
+import br.edu.infnet.cotacao.dto.ProdutoDto;
+import br.edu.infnet.cotacao.feign.client.ProdutoClient;
 import br.edu.infnet.cotacao.persistence.model.Cotacao;
 import br.edu.infnet.cotacao.persistence.repository.CotacaoRepository;
 import br.edu.infnet.cotacao.service.CotacaoService;
+import feign.FeignException;
 
 @Service
 public class CotacaoServiceImpl implements CotacaoService {
 
+	@Autowired
+	private ProdutoClient client;
+	
 	@Autowired
 	private CotacaoRepository repository;
 	
@@ -36,9 +42,19 @@ public class CotacaoServiceImpl implements CotacaoService {
 	}
 
 	@Override
-	public CotacaoDto create(CotacaoDto cotacao) {
-		return new CotacaoDto().fromEntity(
-				repository.save(new CotacaoDto().fromModel(cotacao, LocalDate.now())));
+	public CotacaoDto create(CotacaoDto cotacao) throws Exception {
+		
+		try {
+			ProdutoDto produto = client.getById(cotacao.getIdProduto());
+			
+			if(produto != null)
+				return new CotacaoDto().fromEntity(
+						repository.save(new CotacaoDto().fromModel(cotacao, LocalDate.now())));
+			else
+				return null;
+		} catch (FeignException e) {
+			throw new Error("NAO EXISTE PRODUTO COM ID INFORMADO", e);
+		}
 	}
 
 	@Override

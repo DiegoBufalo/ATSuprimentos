@@ -18,4 +18,8 @@ public interface ProdutoService {
 	public ProdutoDto update(ProdutoDto produto) throws Exception;
 	
 	public void delete(Long id) throws Exception;
+
+	public List<ProdutoDto> getAllWithQuotes();
+
+	public ProdutoDto getByIdWithQuotes(Long id);
 }

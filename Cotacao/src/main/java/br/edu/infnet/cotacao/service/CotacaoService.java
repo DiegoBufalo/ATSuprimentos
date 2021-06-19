@@ -15,7 +15,7 @@ public interface CotacaoService {
 
 	public List<CotacaoDto> getById(Long id);
 	
-	public CotacaoDto create(CotacaoDto cotacao);
+	public CotacaoDto create(CotacaoDto cotacao) throws Exception;
 	
 	public CotacaoDto update(CotacaoDto cotacao) throws Exception;
 	

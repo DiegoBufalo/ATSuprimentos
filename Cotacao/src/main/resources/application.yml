@@ -11,6 +11,6 @@ spring:
     name: Produtos
     
 server:
-  port: 8080
+  port: 8081
   error:
     include-stacktrace: on-param
