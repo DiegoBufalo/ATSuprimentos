@@ -1,6 +1,6 @@
 <h1>Comando para subir uma imagem postgres (Docker):</h1>
 
-docker run --name postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=postgres -p 5432:5432 -d postgres
+docker run --name postgres -e POSTGRES_PASSWORD=root -e POSTGRES_DB=postgres -p 5432:5432 -d postgres
 
 <h1>Para 'buildar' entre na pasta raiz do micro servico e digite:</h1>
 
