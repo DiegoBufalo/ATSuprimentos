@@ -21,5 +21,7 @@ public interface CotacaoService {
 	public CotacaoDto update(CotacaoUpdateDto cotacao) throws Exception;
 	
 	public void delete(Long id) throws Exception;
+	
+	public String writeCotacoes(String path) throws Exception;
 
 }

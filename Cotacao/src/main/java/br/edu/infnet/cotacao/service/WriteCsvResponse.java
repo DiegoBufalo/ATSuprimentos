@@ -1,16 +1,13 @@
 package br.edu.infnet.cotacao.service;
 
-import java.io.PrintWriter;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import br.edu.infnet.cotacao.dto.CotacaoDto;
+import br.edu.infnet.cotacao.persistence.model.Cotacao;
 
 @Service
 public interface WriteCsvResponse {
-
-	public void writeCotacoes(PrintWriter writer, List<CotacaoDto> cotacoes);
 	
-	public void writeCotacoes(PrintWriter writer, CotacaoDto cotacao);
+	public void writeCotacoes(String path, List<Cotacao> cotacoes) throws Exception;
 }

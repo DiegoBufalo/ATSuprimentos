@@ -1,10 +1,8 @@
 package br.edu.infnet.cotacao.controller;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,18 +21,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.infnet.cotacao.dto.ArquivoCsvDto;
 import br.edu.infnet.cotacao.dto.CotacaoDto;
 import br.edu.infnet.cotacao.dto.CotacaoUpdateDto;
 import br.edu.infnet.cotacao.erros.Erro;
 import br.edu.infnet.cotacao.service.CotacaoService;
-import br.edu.infnet.cotacao.service.WriteCsvResponse;
 
 @RestController
 @RequestMapping("cotacao")
 public class CotacaoController {
-	
-	@Autowired
-	private WriteCsvResponse csvService;
 	
 	@Autowired
 	private CotacaoService service;
@@ -75,18 +70,10 @@ public class CotacaoController {
 		service.delete(id);
 	}
 	
-	@GetMapping(path = "/csv", produces = "text/csv")
+	@PostMapping(path = "/csv", produces = "text/csv")
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public void writeCsv(HttpServletResponse response) throws IOException {
-		
-		csvService.writeCotacoes(response.getWriter(), service.getAll());
-	}
-	
-	@GetMapping(path = "{id}/csv", produces = "text/csv")
-	@ResponseStatus(value = HttpStatus.CREATED)
-	public void writeCsv(HttpServletResponse response, @PathVariable Long id) throws IOException {
-		
-		csvService.writeCotacoes(response.getWriter(), service.getById(id));
+	public void writeCsv(@RequestBody ArquivoCsvDto file) throws Exception{
+		service.writeCotacoes(file.getPath()+"\\"+file.getFile());
 	}
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)

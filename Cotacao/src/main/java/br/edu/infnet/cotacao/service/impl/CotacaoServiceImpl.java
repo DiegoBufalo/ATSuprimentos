@@ -16,10 +16,15 @@ import br.edu.infnet.cotacao.mapper.Mapper;
 import br.edu.infnet.cotacao.persistence.model.Cotacao;
 import br.edu.infnet.cotacao.persistence.repository.CotacaoRepository;
 import br.edu.infnet.cotacao.service.CotacaoService;
+import br.edu.infnet.cotacao.service.WriteCsvResponse;
 import feign.FeignException;
 
 @Service
 public class CotacaoServiceImpl implements CotacaoService {
+	
+	
+	@Autowired
+	private WriteCsvResponse csv;
 
 	@Autowired
 	private ProdutoClient client;
@@ -89,6 +94,18 @@ public class CotacaoServiceImpl implements CotacaoService {
 			throw new Exception("ID NAO ENCONTRADO");
 		}
 		
+	}
+
+	@Override
+	public String writeCotacoes(String path) throws Exception {
+		try {
+			List<Cotacao> cotacoes = repository.findByValidadeCotacaoGreaterThanEqualOrderById(LocalDate.now());
+			csv.writeCotacoes(path, cotacoes);
+			
+			return	"Arquivo Criado em " + path;		
+		} catch (Exception e) {
+			throw new Exception("Algo deu errado");
+		}
 	}
 
 }
