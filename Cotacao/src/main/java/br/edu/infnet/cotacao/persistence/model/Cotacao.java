@@ -38,6 +38,9 @@ public class Cotacao {
 	@Column(name = "Nome_Fornecedor")
 	private String fornecedor;
 	
+	@Column(name = "Nome_Produto")
+	private String produto;
+	
 	@Column(name = "data_cotacao", updatable = false)
 	@Convert(converter = Jsr310JpaConverters.LocalDateConverter.class)
 	private LocalDate dataCotacao;

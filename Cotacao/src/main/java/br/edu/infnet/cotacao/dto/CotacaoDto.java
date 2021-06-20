@@ -27,6 +27,8 @@ public class CotacaoDto {
 	@NotNull(message =  "Fornecedor nao pode ser nulo")
 	private String fornecedor;
 	
+	private String produto;
+	
 	private LocalDate dataCotacao;
 
 	@FutureOrPresent(message = "Confira a data de validade, ela nao pode ser anterior a hoje")

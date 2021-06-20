@@ -29,6 +29,9 @@ public class CotacaoUpdateDto {
 	@NotNull(message =  "Fornecedor nao pode ser nulo")
 	private String fornecedor;
 	
+	@NotNull(message =  "Produto nao pode ser nulo")
+	private String produto;
+	
 	@PastOrPresent(message = "Atencao, voce nao pode alterar a data ja cadastrada")
 	@NotNull(message = "Data do lancamento nao pode ser nula")
 	private LocalDate dataCotacao;

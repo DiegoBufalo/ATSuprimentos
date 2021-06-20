@@ -10,10 +10,11 @@ CREATE SCHEMA cotacao;
 
 CREATE TABLE cotacao.cotacao (
 	id bigserial NOT NULL,
-	data_cotacao timestamp NULL,
-	nome_fornecedor varchar(255) NULL,
-	id_produto int8 NULL,
-	preco numeric(19,2) NULL,
-	validade_cotacao timestamp NULL,
+	data_cotacao timestamp NOT NULL,
+	nome_fornecedor varchar(255) NOT NULL,
+	nome_produto varchar(255) NOT NULL,
+	id_produto int8 NOT NULL,
+	preco numeric(19,2) NOT NULL,
+	validade_cotacao timestamp NOT NULL,
 	CONSTRAINT cotacao_pkey PRIMARY KEY (id)
 );

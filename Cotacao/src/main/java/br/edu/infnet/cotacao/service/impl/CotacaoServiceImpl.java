@@ -61,7 +61,7 @@ public class CotacaoServiceImpl implements CotacaoService {
 			
 			if(produto != null)
 				return new Mapper().fromEntity(
-						repository.save(new Mapper().fromModel(cotacao, LocalDate.now())));
+						repository.save(new Mapper().fromModel(cotacao, LocalDate.now(), produto.getNome())));
 			else
 				return null;
 		} catch (FeignException e) {

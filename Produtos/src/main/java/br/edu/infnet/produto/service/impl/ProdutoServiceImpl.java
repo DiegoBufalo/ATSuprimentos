@@ -53,6 +53,7 @@ public class ProdutoServiceImpl implements ProdutoService{
 			
 			return produtosWithQuotes;
 		} catch (FeignException e) {
+			e.printStackTrace();
 			throw new Error("ALGO DEU ERRADO");
 		}
 	}

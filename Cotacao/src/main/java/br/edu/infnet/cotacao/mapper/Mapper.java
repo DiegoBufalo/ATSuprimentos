@@ -26,6 +26,20 @@ public class Mapper {
 		return entity;
 	}
 	
+	public Cotacao fromModel(CotacaoDto model, LocalDate date, String produto) {
+		var entity = new Cotacao();
+		
+		entity.setId(model.getId());
+		entity.setIdProduto(model.getIdProduto());
+		entity.setFornecedor(model.getFornecedor());
+		entity.setPreco(model.getPreco());
+		entity.setProduto(produto);
+		entity.setValidadeCotacao(model.getValidadeCotacao());
+		entity.setDataCotacao(date);
+		
+		return entity;
+	}
+	
 	public Cotacao fromModel(CotacaoDto model) {
 		var entity = new Cotacao();
 		
@@ -46,6 +60,7 @@ public class Mapper {
 		entity.setIdProduto(model.getIdProduto());
 		entity.setFornecedor(model.getFornecedor());
 		entity.setPreco(model.getPreco());
+		entity.setProduto(model.getProduto());
 		entity.setValidadeCotacao(model.getValidadeCotacao());
 		entity.setDataCotacao(model.getDataCotacao());
 		
@@ -59,6 +74,7 @@ public class Mapper {
 		entity.setIdProduto(model.getIdProduto());
 		entity.setFornecedor(model.getFornecedor());
 		entity.setPreco(model.getPreco());
+		entity.setProduto(model.getProduto());
 		entity.setValidadeCotacao(model.getValidadeCotacao());
 		entity.setDataCotacao(model.getDataCotacao());
 		
@@ -75,6 +91,7 @@ public class Mapper {
 			entity.setIdProduto(model.getIdProduto());
 			entity.setFornecedor(model.getFornecedor());
 			entity.setPreco(model.getPreco());
+			entity.setProduto(model.getProduto());
 			entity.setValidadeCotacao(model.getValidadeCotacao());
 			entity.setDataCotacao(model.getDataCotacao());
 			
