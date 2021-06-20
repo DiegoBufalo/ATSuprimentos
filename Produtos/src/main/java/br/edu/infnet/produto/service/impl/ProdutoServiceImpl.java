@@ -6,10 +6,12 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.edu.infnet.produto.dto.CotacaoDto;
 import br.edu.infnet.produto.dto.ProdutoDto;
 import br.edu.infnet.produto.feign.client.CotacaoClient;
+import br.edu.infnet.produto.mapper.Mapper;
 import br.edu.infnet.produto.persistence.model.Produto;
 import br.edu.infnet.produto.persistence.repository.ProdutoRepository;
 import br.edu.infnet.produto.service.ProdutoService;
@@ -25,25 +27,28 @@ public class ProdutoServiceImpl implements ProdutoService{
 	private ProdutoRepository repository;
 	
 	@Override
+	@Transactional(readOnly = true)
 	public List<ProdutoDto> getAll() {
-		return new ProdutoDto().fromEntity(repository.findAll());
+		return new Mapper().fromEntity(repository.findAllByOrderById());
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public ProdutoDto getById(Long id) {
-		return new ProdutoDto().fromEntity(repository.findById(id).get());
+		return new Mapper().fromEntity(repository.findById(id).get());
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
 	public List<ProdutoDto> getAllWithQuotes() {
 		
 		try {
 			List<ProdutoDto> produtosWithQuotes = new ArrayList<>();
-			List<Produto> produtos = repository.findAll();
+			List<Produto> produtos = repository.findAllByOrderById();
 			
 			for(Produto produto : produtos) {
 				List<CotacaoDto> quotes = client.getById(produto.getId());
-				produtosWithQuotes.add(new ProdutoDto().fromEntity(produto, quotes));
+				produtosWithQuotes.add(new Mapper().fromEntity(produto, quotes));
 			}
 			
 			return produtosWithQuotes;
@@ -53,13 +58,14 @@ public class ProdutoServiceImpl implements ProdutoService{
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public ProdutoDto getByIdWithQuotes(Long id) {
 		
 		try {
 			
 			List<CotacaoDto> cotacao = client.getById(id);
 			
-			return new ProdutoDto().fromEntity(repository.findById(id).get(), cotacao);
+			return new Mapper().fromEntity(repository.findById(id).get(), cotacao);
 			
 		} catch (FeignException e) {
 			throw new Error("ALGO DEU ERRADO");
@@ -67,21 +73,23 @@ public class ProdutoServiceImpl implements ProdutoService{
 	}
 
 	@Override
+	@Transactional
 	public ProdutoDto create(ProdutoDto produto) {
-		return new ProdutoDto().fromEntity(
+		return new Mapper().fromEntity(
 					repository.save(
-							new ProdutoDto().fromModel(produto)));
+							new Mapper().fromModel(produto)));
 	}
 
 	@Override
+	@Transactional
 	public ProdutoDto update(ProdutoDto produto) throws Exception {
 		
 		Optional<Produto> produtoEncontrado = repository.findById(produto.getId());
 		
 		if(produtoEncontrado.isPresent()) {
-			return new ProdutoDto().fromEntity(
+			return new Mapper().fromEntity(
 					repository.save(
-							new ProdutoDto().fromModel(produto)));
+							new Mapper().fromModel(produto)));
 		}
 		else {
 			throw new Exception("ID NAO ENCONTRADO");
@@ -89,6 +97,7 @@ public class ProdutoServiceImpl implements ProdutoService{
 	}
 
 	@Override
+	@Transactional
 	public void delete(Long id) throws Exception {
 		Optional<Produto> produtoEncontrado = repository.findById(id);
 		

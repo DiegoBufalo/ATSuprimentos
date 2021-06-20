@@ -2,12 +2,18 @@ package br.edu.infnet.cotacao.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +24,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.infnet.cotacao.dto.CotacaoDto;
+import br.edu.infnet.cotacao.dto.CotacaoUpdateDto;
+import br.edu.infnet.cotacao.erros.Erro;
 import br.edu.infnet.cotacao.service.CotacaoService;
 import br.edu.infnet.cotacao.service.WriteCsvResponse;
 
@@ -51,13 +59,13 @@ public class CotacaoController {
 	
 	@PostMapping("/criar")
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public CotacaoDto create(@RequestBody CotacaoDto cotacao) throws Exception {
+	public CotacaoDto create(@RequestBody @Valid CotacaoDto cotacao) throws Exception {
 		return service.create(cotacao);
 	}
 	
 	@PutMapping("/atualizar")
 	@ResponseStatus(value = HttpStatus.OK)
-	public CotacaoDto update(@RequestBody CotacaoDto cotacao) throws Exception {
+	public CotacaoDto update(@RequestBody @Valid CotacaoUpdateDto cotacao) throws Exception {
 		return service.update(cotacao);
 	}
 	
@@ -80,4 +88,12 @@ public class CotacaoController {
 		
 		csvService.writeCotacoes(response.getWriter(), service.getById(id));
 	}
+	
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public Erro validationError(MethodArgumentNotValidException ex) {
+        BindingResult result = ex.getBindingResult();
+        final List<FieldError> fieldErrors = result.getFieldErrors();
+        
+        return new Erro("Erro de Validacao", fieldErrors.stream().map(s -> s.getDefaultMessage()).collect(Collectors.toList()));
+    }
 }

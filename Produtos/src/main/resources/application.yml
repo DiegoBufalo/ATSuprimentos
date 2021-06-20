@@ -1,14 +1,21 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres?schema=ATSuprimentos
+    url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: root
   jpa:
     database: postgresql
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
   application:
-    name: Produtos
+    name: produto
+  sql:
+    init:
+      mode: always
+      continue-on-error: true
+      data-locations:
+      - classpath:data.sql
+      platform: postgresql
     
 server:
   port: 8080

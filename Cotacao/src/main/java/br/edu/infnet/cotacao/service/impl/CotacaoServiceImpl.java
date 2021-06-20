@@ -6,10 +6,13 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.edu.infnet.cotacao.dto.CotacaoDto;
+import br.edu.infnet.cotacao.dto.CotacaoUpdateDto;
 import br.edu.infnet.cotacao.dto.ProdutoDto;
 import br.edu.infnet.cotacao.feign.client.ProdutoClient;
+import br.edu.infnet.cotacao.mapper.Mapper;
 import br.edu.infnet.cotacao.persistence.model.Cotacao;
 import br.edu.infnet.cotacao.persistence.repository.CotacaoRepository;
 import br.edu.infnet.cotacao.service.CotacaoService;
@@ -25,31 +28,35 @@ public class CotacaoServiceImpl implements CotacaoService {
 	private CotacaoRepository repository;
 	
 	@Override
+	@Transactional(readOnly = true)
 	public List<CotacaoDto> getAll() {
-		return new CotacaoDto().fromEntity(
-				repository.findByValidadeCotacaoGreaterThanEqual(LocalDate.now()));
+		return new Mapper().fromEntity(
+				repository.findByValidadeCotacaoGreaterThanEqualOrderById(LocalDate.now()));
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
 	public List<CotacaoDto> getAllExpired() {
-		return new CotacaoDto().fromEntity(
-				repository.findByValidadeCotacaoLessThan(LocalDate.now()));
+		return new Mapper().fromEntity(
+				repository.findByValidadeCotacaoLessThanOrderById(LocalDate.now()));
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<CotacaoDto> getById(Long id) {
-		return new CotacaoDto().fromEntity(repository.findByIdProdutoOrderById(id));
+		return new Mapper().fromEntity(repository.findByIdProdutoAndValidadeCotacaoGreaterThanEqualOrderById(id, LocalDate.now()));
 	}
 
 	@Override
+	@Transactional
 	public CotacaoDto create(CotacaoDto cotacao) throws Exception {
 		
 		try {
 			ProdutoDto produto = client.getById(cotacao.getIdProduto());
 			
 			if(produto != null)
-				return new CotacaoDto().fromEntity(
-						repository.save(new CotacaoDto().fromModel(cotacao, LocalDate.now())));
+				return new Mapper().fromEntity(
+						repository.save(new Mapper().fromModel(cotacao, LocalDate.now())));
 			else
 				return null;
 		} catch (FeignException e) {
@@ -58,19 +65,21 @@ public class CotacaoServiceImpl implements CotacaoService {
 	}
 
 	@Override
-	public CotacaoDto update(CotacaoDto cotacao) throws Exception {
+	@Transactional
+	public CotacaoDto update(CotacaoUpdateDto cotacao) throws Exception {
 		
 		Optional<Cotacao> cotacaoEncontrada = repository.findById(cotacao.getId());
 		
 		if(cotacaoEncontrada.isPresent()) {
-			return new CotacaoDto().fromEntity(
-						repository.save(new CotacaoDto().fromModel(cotacao)));
+			return new Mapper().fromEntity(
+						repository.save(new Mapper().fromModelUpdate(cotacao)));
 		}else {
 			throw new Exception("ID NAO ENCONTRADO");
 		}
 	}
 
 	@Override
+	@Transactional
 	public void delete(Long id) throws Exception {
 		Optional<Cotacao> cotacaoEncontrada = repository.findById(id);
 		

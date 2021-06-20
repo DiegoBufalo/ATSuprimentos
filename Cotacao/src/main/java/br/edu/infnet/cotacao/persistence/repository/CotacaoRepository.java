@@ -11,9 +11,9 @@ import br.edu.infnet.cotacao.persistence.model.Cotacao;
 @Repository
 public interface CotacaoRepository extends JpaRepository<Cotacao, Long>{
 	
-	List<Cotacao> findByValidadeCotacaoGreaterThanEqual(LocalDate validadeCotacao);
+	List<Cotacao> findByValidadeCotacaoGreaterThanEqualOrderById(LocalDate validadeCotacao);
 	
-	List<Cotacao> findByValidadeCotacaoLessThan(LocalDate validadeCotacao);
+	List<Cotacao> findByValidadeCotacaoLessThanOrderById(LocalDate validadeCotacao);
 	
-	List<Cotacao> findByIdProdutoOrderById(Long idProduto);
+	List<Cotacao> findByIdProdutoAndValidadeCotacaoGreaterThanEqualOrderById(Long idProduto, LocalDate data);
 }
