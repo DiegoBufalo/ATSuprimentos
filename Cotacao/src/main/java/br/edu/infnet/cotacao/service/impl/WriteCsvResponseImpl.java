@@ -21,8 +21,6 @@ public class WriteCsvResponseImpl implements WriteCsvResponse{
 	public void writeCotacoes(String path, List<Cotacao> cotacoes) throws Exception {
 
 		try {
-
-			System.out.println("ESCRITA DE ARQUIVO INICIADA");
 			
 	        Writer writer = Files.newBufferedWriter(Paths.get(path));
 	        StatefulBeanToCsv<Cotacao> beanToCsv = new StatefulBeanToCsvBuilder<Cotacao>(writer).build();
@@ -31,8 +29,6 @@ public class WriteCsvResponseImpl implements WriteCsvResponse{
 
 	        writer.flush();
 	        writer.close();
-
-			System.out.println("ESCRITA DE ARQUIVO FINALIZADA");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			throw new Error("Caminho passado nao pode ser acessado");
